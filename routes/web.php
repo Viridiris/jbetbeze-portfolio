@@ -25,6 +25,12 @@ Route::get('posts/{post}', function ($slug) {
         return redirect('/');
     }
 
+    // Cache the file for 20 minutes
+    $post = cache()->remember("posts.{$slug}", now()->addMinutes(20), function () use ($path) {
+        var_dump('file_get_contents');
+        return file_get_contents($path);
+    });
+
 
     $post = file_get_contents(__DIR__ . "/../resources/posts/{$slug}.html");
 
